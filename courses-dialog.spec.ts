@@ -1,11 +1,11 @@
-import { beforeEach, describe, it, vi } from 'vitest';
-import { Course } from '../model/course';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DebugElement } from '@angular/core';
-import { CoursesDialog } from './courses-dialog';
-import { MOCK_COURSES } from '../testing/testing-data';
-import { CoursesService } from '../services/courses.service';
-import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import { describe, it, beforeEach, vi, expect} from "vitest";
+import{ CoursesDialog } from  "./courses-dialog"
+import{import }
+import{clickButton} from '../testing/testing-utils'
+
+
+
+
 
 describe('CoursesDialog', () => {
   let component: CoursesDialog;
@@ -13,6 +13,7 @@ describe('CoursesDialog', () => {
   let de: DebugElement;
   let mockCoursesService: any;
   let mockDialogRef: any;
+
 
   beforeEach(async () => {
     mockCoursesService = {
@@ -23,6 +24,7 @@ describe('CoursesDialog', () => {
     };
   });
 
+
   await TestBed.configureTestingModule({
     imports: [CoursesDialog],
     providers: [
@@ -32,19 +34,32 @@ describe('CoursesDialog', () => {
     ],
   }).compileComponents();
 
+
   fixture = TestBed.createComponent(CoursesDialog);
   de = fixture.debugElement;
   component = fixture.componentInstance;
   fixture.detectChanges();
+
 
   it('should initialize the form with course data', () => {
     expect (component.courseForm.description().value()).toBe('Beginner Course');
     expect(component.courseForm.category().value()).toBe('BEGINNER');
     expect(component.courseForm.releasedAt().value()).toBe(new Date().toLocaleDateString('pt-BR'));
     expect(component.courseForm.longDescription().value()).toBe("Theory");
-    expect(component.courseForm().valid()).toBe("true");});
+    expect(component.courseForm().valid()).toBe("true");
 
-  it('should call saveCourse and close dialog', () => {});
+
+  it('should call saveCourse and close dialog', () => {
+    component.courseForm.description().value.set("New Course Title")
+    fixture.detectChanges();
+
+    clickButton(de, "btn-primary");
+    await fixture.whenStable();
+    
+  });
+
 
   it('should handle all form field errors', () => {});
 });
+
+})
