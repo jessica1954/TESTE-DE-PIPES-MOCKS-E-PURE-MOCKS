@@ -1,11 +1,13 @@
-import { beforeEach, describe, it, vi } from 'vitest';
-import { Course } from '../model/course';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DebugElement } from '@angular/core';
+import { describe, it, beforeEach, expect, vi } from 'vitest';
 import { CoursesDialog } from './courses-dialog';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MOCK_COURSES } from '../testing/testing-data';
 import { CoursesService } from '../services/courses.service';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import { By } from '@angular/platform-browser';
+import { DebugElement } from '@angular/core';
+import { clickButton } from '../testing/testing-utils';
+import { FieldState } from '@angular/forms/signals';
 
 describe('CoursesDialog', () => {
   let component: CoursesDialog;
@@ -38,13 +40,47 @@ describe('CoursesDialog', () => {
   fixture.detectChanges();
 
   it('should initialize the form with course data', () => {
-    expect (component.courseForm.description().value()).toBe('Beginner Course');
+    expect(component.courseForm.description().value()).toBe('Beginner Course');
+
     expect(component.courseForm.category().value()).toBe('BEGINNER');
     expect(component.courseForm.releasedAt().value()).toBe(new Date().toLocaleDateString('pt-BR'));
-    expect(component.courseForm.longDescription().value()).toBe("Theory");
-    expect(component.courseForm().valid()).toBe("true");});
+    expect(component.courseForm.longDescription().value()).toBe('Theory.');
+    expect(component.courseForm().valid()).toBe('true');
+  });
 
-  it('should call saveCourse and close dialog', () => {});
+  it('should call saveCourse and close dialog', () => {
+    component.courseForm.description().value.set('New Course Title');
+    fixture.detectChanges();
 
-  it('should handle all form field errors', () => {});
+    clickButton(de, 'btn-primary');
+    await fixture.whenStable();
+
+    expect.objectContaining({
+      titles: expect.objectContaining({ description: 'New Course Title' }),
+    });
+    expect(mockDialogRef.close).toHaveBeenCalled();
+  });
+
+  it('should handle all form field errors', () => {
+    testFieldError(component.courseForm.description(), '.description', 'Description is requerid');
+    testFieldError(component.courseForm.category(), '.category', 'Category is requerid');
+    testFieldError(component.courseForm.releasedAt(), '.released-at', 'Released Date is requerid');
+    testFieldError(
+      component.courseForm.longDescription(),
+      '.long-description',
+      'Long Description is required',
+    );
+  });
+  function testFieldError(fieldState: FieldState<any>, selector: string, message: string) {
+    fieldState.value.set('');
+    fieldState.markAsTouched();
+    fixture.detectChanges();
+
+    const errorList = de.query(By.css(`${selector} .error-list`));
+    expect(errorList).toBeTruthy();
+    expect(errorList.nativeElement.textContent).toContain(message);
+
+    const saveBtn = de.query(By.css('.btn-primary'))?.nativeElement;
+    expect(saveBtn?.disabled).toBe(true);
+  }
 });
