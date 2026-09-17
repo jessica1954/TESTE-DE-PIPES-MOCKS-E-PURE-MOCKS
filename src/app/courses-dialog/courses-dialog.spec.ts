@@ -52,7 +52,7 @@ describe('CoursesDialog', async () => {
     component.courseForm.description().value.set('New Course Title');
     fixture.detectChanges();
 
-    clickButton(de, 'btn-primary');
+    clickButton(de, '.btn-primary');
     await fixture.whenStable();
 
     expect.objectContaining({
