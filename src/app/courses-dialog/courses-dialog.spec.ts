@@ -9,7 +9,7 @@ import { DebugElement } from '@angular/core';
 import { clickButton } from '../testing/testing-utils';
 import { FieldState } from '@angular/forms/signals';
 
-describe('CoursesDialog', () => {
+describe('CoursesDialog', async () => {
   let component: CoursesDialog;
   let fixture: ComponentFixture<CoursesDialog>;
   let de: DebugElement;
@@ -48,7 +48,7 @@ describe('CoursesDialog', () => {
     expect(component.courseForm().valid()).toBe('true');
   });
 
-  it('should call saveCourse and close dialog', () => {
+  it('should call saveCourse and close dialog', async () => {
     component.courseForm.description().value.set('New Course Title');
     fixture.detectChanges();
 
