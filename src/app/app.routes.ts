@@ -1,34 +1,34 @@
-import {Routes} from '@angular/router';
-import {AboutUs} from './about-us/about-us';
-import {Courses} from './courses/courses';
-import {courseResolver} from './services/course.resolver';
-import {CoursePage} from './course-page/course-page';
+import { Routes } from '@angular/router';
+import { AboutUs } from './about-us/about-us';
+import { Courses } from './courses/courses';
+import { courseResolver } from './services/course.resolver';
+import { CoursePage } from './course-page/course-page';
 
 export const routes: Routes = [
   {
-    path: "courses",
+    path: 'courses',
     component: Courses,
-    title: 'Courses'
+    title: 'Courses',
   },
   {
-    path: "about",
+    path: 'about',
     component: AboutUs,
-    title: 'About Us'
+    title: 'About Us',
   },
   {
     path: 'courses/:id',
     component: CoursePage,
     resolve: {
-      course: courseResolver
-    }
+      course: courseResolver,
+    },
   },
   {
-    path: "",
+    path: '',
     redirectTo: 'courses',
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
   {
-    path: "**",
-    redirectTo: 'courses'
-  }
+    path: '**',
+    redirectTo: 'courses',
+  },
 ];
